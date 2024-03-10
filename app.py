@@ -52,11 +52,15 @@ def info():
     return jsonify(res)
 
 
-@app.route('youtube/<searchterm>')
+@app.route('/youtube/<searchterm>')
 def show_youtube(searchterm):
-    limit = 5
+    limit = 9
     res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT}", headers={'Content-Type': 'application/json'}).json()
-    return jsonify(res)
+    print(res["items"][0]["id"]["videoId"])
+    video_id = res["items"][0]["id"]["videoId"]
+    video_ids = [res["items"][i]["id"]["videoId"] for i in range(len(res["items"]))]
+    return render_template('youtube.html', video_ids=video_ids)
+    #return jsonify(res)
 
 
 @app.route('/exercisestart')
