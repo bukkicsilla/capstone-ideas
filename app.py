@@ -56,12 +56,18 @@ def info():
 def show_youtube(searchterm):
     limit = 3
     searchterm += " exercise"
-    res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT}", headers={'Content-Type': 'application/json'}).json()
-    print(res["items"][0]["id"]["videoId"])
-    #video_id = res["items"][0]["id"]["videoId"]
+    res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT1}", headers={'Content-Type': 'application/json'}).json()
+    if "items" not in res:
+        print("First YT Quota exceeded")
+        #return jsonify({"error": "Quota exceeded"})
+        res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT2}", headers={'Content-Type': 'application/json'}).json()
+        if "items" not in res:
+            print("Second YT Quota exceeded")
+            res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT3}", headers={'Content-Type': 'application/json'}).json()
+
+    
     video_ids = [res["items"][i]["id"]["videoId"] for i in range(len(res["items"]))]
     return render_template('youtube.html', video_ids=video_ids)
-    #return jsonify(res)
 
 
 @app.route('/exercisestart')
@@ -70,7 +76,6 @@ def exercise():
     offset = 0
     res = requests.get(f"{constants.BASE_URL_EXERCISE}{muscle}&offset={offset}", headers={'X-Api-Key': constants.API_KEY_NINJAS}).json()
     names = [res[i]['name'] for i in range(len(res))]
-    #return jsonify(res)
     return render_template('exercise.html', names=names, muscle=muscle)
 
 
@@ -92,6 +97,5 @@ def exercise_offset():
             names.append(res[i]['name'].replace("/", " "))
         else:        
             names.append(res[i]['name'])
-
     return render_template('exercise.html', names=names, muscle=muscle)
 
