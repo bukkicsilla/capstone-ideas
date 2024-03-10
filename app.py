@@ -47,18 +47,18 @@ def news():
 @app.route('/youtubeinfo')
 def info():
     searchterm = "Glute bridge"
-    limit = 25
+    limit = 1
     res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT}", headers={'Content-Type': 'application/json'}).json()
     return jsonify(res)
 
 
 @app.route('/youtube/<searchterm>')
 def show_youtube(searchterm):
-    limit = 9
+    limit = 3
     searchterm += " exercise"
     res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT}", headers={'Content-Type': 'application/json'}).json()
     print(res["items"][0]["id"]["videoId"])
-    video_id = res["items"][0]["id"]["videoId"]
+    #video_id = res["items"][0]["id"]["videoId"]
     video_ids = [res["items"][i]["id"]["videoId"] for i in range(len(res["items"]))]
     return render_template('youtube.html', video_ids=video_ids)
     #return jsonify(res)
@@ -85,6 +85,13 @@ def exercise_offset():
     if not offset:
         offset = 0
     res = requests.get(f"{constants.BASE_URL_EXERCISE}{muscle}&offset={offset}", headers={'X-Api-Key': constants.API_KEY_NINJAS}).json()
-    names = [res[i]['name'] for i in range(len(res))]
+    #names = [res[i]['name'] for i in range(len(res))]
+    names = []
+    for i in range(len(res)):
+        if "/" in res[i]['name']:
+            names.append(res[i]['name'].replace("/", " "))
+        else:        
+            names.append(res[i]['name'])
+
     return render_template('exercise.html', names=names, muscle=muscle)
 

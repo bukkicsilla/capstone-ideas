@@ -30,7 +30,8 @@ URL_NEWS = "https://newsapi.org/v2/everything"
 
 
 #YouTube Data API v3
-API_KEY_YT = "AIzaSyBwQs8zpR7vmFMWaTgMxk5BYuledF21SkQ"
+#API_KEY_YT = "AIzaSyBwQs8zpR7vmFMWaTgMxk5BYuledF21SkQ"
+API_KEY_YT = "AIzaSyCS3pe8qx0YMeKLkAB1ahpXyakyPNbbHdQ"
 BASE_URL_YT = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&q="
 
 
