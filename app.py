@@ -55,6 +55,7 @@ def info():
 @app.route('/youtube/<searchterm>')
 def show_youtube(searchterm):
     limit = 9
+    searchterm += " exercise"
     res = requests.get(f"{constants.BASE_URL_YT}{searchterm}&maxResults={limit}&key={constants.API_KEY_YT}", headers={'Content-Type': 'application/json'}).json()
     print(res["items"][0]["id"]["videoId"])
     video_id = res["items"][0]["id"]["videoId"]
